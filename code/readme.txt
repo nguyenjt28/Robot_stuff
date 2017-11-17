@@ -7,3 +7,4 @@
 
 -Got extremities code working
 -Need to cut out bottom half of image
+-Updated Cam tracking
