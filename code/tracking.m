@@ -17,7 +17,7 @@ close all
 
 % while(1)
 %     cam_snap = getsnapshot(cam);
-    cam_snap = imread('IR3_gesture10.jpg');          %%%Use picture
+    cam_snap = imread('IR1_gesture5.jpg');          %%%Use picture
     level = graythresh(cam_snap)+0.08;
     bwthreshold = 0.5;                         %%%Black White Threshold Value
     BW = imbinarize(cam_snap,level);      %%%Binarizes cam_snap
@@ -50,26 +50,30 @@ close all
     rectangle('Position',[column1L row1L wL hL],'EdgeColor','r','LineStyle','-.','LineWidth',1.5);
     center  = regionprops(BW, 'centroid');
     centroids = cat(1, center.Centroid);
-    plot(centroids(:,1), centroids(:,2), '+r', 'MarkerSize',10); %Mass Centroid
+    plot(centroids(:,1), centroids(:,2), '+r', 'MarkerSize',10);    %Mass Centroid
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     Lcheck = abs(centroids(1) - column1L);
     Rcheck = abs(centroids(1) - column2L);
-    if Lcheck > Rcheck
+    totalCheck = Lcheck - Rcheck;
+    if totalCheck > 10
         motion = 'LEFT'
-    elseif Rcheck > Lcheck
+    elseif totalCheck < -10
         motion = 'RIGHT'
+    elseif totalCheck >= -10 && totalCheck <= 10
+        motion = 'CENTER'
     end
+    
     
     pointBOX = BW(row1L:row2L,column1L:column2L);
     point1L = find(pointBOX,1,'first')+row1L;
     point2L = mod(find(pointBOX,1,'last'),(row2L-row1L+1))+row1L;
-%     if point1L < centroid(2)
+    if point1L < centroids(2)
         plot(column1L,point1L, '*g', 'MarkerSize',10)
-%     end
-%     if point2L < centroid(2)
+    end
+    if point2L < centroids(2)
         plot(column2L,point2L, '*g', 'MarkerSize',10)
-%     end
+    end
     
     boundary1 = 1;
     boundary2 = length(BW)-100;
