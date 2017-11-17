@@ -15,15 +15,9 @@ cam.ReturnedColorSpace = 'grayscale';
 triggerconfig(cam,'manual');
 start(cam);
 
-<<<<<<< HEAD
 % while(1)
 %     cam_snap = getsnapshot(cam);
     cam_snap = imread('IR1_gesture5.jpg');          %%%Use picture
-=======
-while(1)
-    cam_snap = getsnapshot(cam);
-%     cam_snap = imread('IR3_gesture10.jpg');          %%%Use picture
->>>>>>> da193178612969e87050e2af67405ee39c3ab807
     level = graythresh(cam_snap)+0.08;
     bwthreshold = 0.5;                         %%%Black White Threshold Value
     BW = imbinarize(cam_snap,level);      %%%Binarizes cam_snap
@@ -69,8 +63,6 @@ while(1)
     elseif totalCheck >= -10 && totalCheck <= 10
         motion = 'CENTER'
     end
-
-    
     
     pointBOX = BW(row1L:row2L,column1L:column2L);
     point1L = find(pointBOX,1,'first')+row1L;
