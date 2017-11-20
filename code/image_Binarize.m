@@ -2,7 +2,7 @@
 
 function BW = image_Binarize(cam_snap)
 
-    BW_Sensitivity = 0.08;                         %%%Black White Sensitivity Value
+    BW_Sensitivity = 0.05;                         %%%Black White Sensitivity Value
     level = graythresh(cam_snap)+BW_Sensitivity;
     
     BW = imbinarize(cam_snap,level);      %%%Binarizes cam_snap
