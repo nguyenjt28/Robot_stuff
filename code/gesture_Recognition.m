@@ -6,7 +6,7 @@ clear
 close all
 
 %%%Raspberry Initialize
-%  mypi = raspi;
+ mypi = raspi;
 
 %%%Initialize Camera
   cam = videoinput('winvideo', 1,'YUY2_640x480');                                       %%%YUY2_640x480 for infrared sensor
@@ -21,8 +21,9 @@ timebuffer = 0;
 gesturetest = 1;
 VBuffer = 50;                                                              %%%VBuffer is the difference in vertical pixels between extremeties
 HBuffer = 50;                                                              %%%HBuffer is the difference in horizontal pixels between extremeties
-    
+
  while(1)
+ 
    cam_snap = getsnapshot(cam);                   
    % cam_snap = imread('picR142.jpg');                                      %%%Use picture
     BW = image_Binarize(cam_snap);   
@@ -151,7 +152,7 @@ HBuffer = 50;                                                              %%%HB
 
 
 
-%     cam_Tracking(cam_snap,mypi,centroids);
+    cam_Tracking(cam_snap,mypi,centroids);
     end
  end 
 
