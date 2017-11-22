@@ -5,17 +5,21 @@ clc
 clear
 close all
 
+directory = 'C:\Users\Justen\Desktop\New folder';                           %%%Set File directory for commands.csv
+
 %%%Raspberry Initialize
- mypi = raspi;
+%  mypi = raspi;
+
 
 %%%Initialize Camera
-  cam = videoinput('winvideo', 1,'YUY2_640x480');                                       %%%YUY2_640x480 for infrared sensor
-  cam.FramesPerTrigger = 1;
-  cam.ReturnedColorSpace = 'grayscale';
-  triggerconfig(cam,'manual');
-  start(cam);
+%   cam = videoinput('winvideo', 1);                                       %%%YUY2_640x480 for infrared sensor
+%   cam.FramesPerTrigger = 1;
+%   cam.ReturnedColorSpace = 'grayscale';
+%   triggerconfig(cam,'manual');
+%   start(cam);
 
-%%%%Settings
+%%%%Settings    
+labels = {'Forward', 'move_Right', 'move_Left', 'pan_Right', 'pan_Left'};
 gesture=zeros(1,4);                                                        %%%Number of gestures currently implemented
 timebuffer = 0;
 gesturetest = 1;
@@ -23,13 +27,12 @@ VBuffer = 50;                                                              %%%VB
 HBuffer = 50;                                                              %%%HBuffer is the difference in horizontal pixels between extremeties
 
  while(1)
- 
-   cam_snap = getsnapshot(cam);                   
-   % cam_snap = imread('picR142.jpg');                                      %%%Use picture
-    BW = image_Binarize(cam_snap);   
-    %%%Binarizes the image
+   commands = zeros(1,5); 
+%    cam_snap = getsnapshot(cam);                   
+   cam_snap = imread('picR22.jpg');                                       %%%Use picture
+   BW = image_Binarize(cam_snap);                                          %%%Binarizes the image
     
-    [centroids, row1L, row2L, column1L, column2L] = draw_Rectangle(BW);    %%%Locates user and draws a rectangle
+   [centroids, row1L, row2L, column1L, column2L] = draw_Rectangle(BW);     %%%Locates user and draws a rectangle
          
 %    figure(2); imshow(BW);
    
@@ -72,6 +75,7 @@ HBuffer = 50;                                                              %%%HB
 
     if ((point2L-point1L) <= VBuffer) && (column2L-column1L)>=0.7*(row2L-row1L) && RHU==1 && LHU==1 && gesture(k)~=1%%%If extremeties are roughly on the same horizontal plane and extended horizontally from the centroid, gesture is recognized
         disp('BOTH HANDS')
+        commands(1) = 1;
         gesturetest=0;
         for i=1:length(gesture)                                            %%%This for loop makes it so that a gesture cannot be recognized twice in a row and should be added to every gesture
             if i~=k
@@ -100,6 +104,7 @@ HBuffer = 50;                                                              %%%HB
 
     if (LHU == 1) && (RHU == 0) && (thetaL>=15 && thetaL<=35) && gesture(k)~=1 && (abs(thetaL-thetaR)>=10)    %%%If only (graphically) right hand is horizontal to centroid, gesture is recognized
         disp('RIGHT HAND')
+        commands(2) = 1;
         gesturetest=0;
         for i=1:length(gesture)                                            %%%This for loop makes it so that a gesture cannot be recognized twice in a row and should be added to every gesture
             if i~=k
@@ -114,6 +119,7 @@ HBuffer = 50;                                                              %%%HB
 
     if (RHU == 1) && (LHU == 0) && (thetaR>=15 && thetaR<=35) && gesture(k)~=1 && (abs(thetaL-thetaR)>=10) %%%If only (graphically) left hand is horizontal to centroid, gesture is recognized
         disp('LEFT HAND')
+        commands(3) = 1;
         gesturetest=0;
         for i=1:length(gesture)                                            %%%This for loop makes it so that a gesture cannot be recognized twice in a row and should be added to every gesture
             if i~=k
@@ -152,8 +158,10 @@ HBuffer = 50;                                                              %%%HB
 
 
 
-    cam_Tracking(cam_snap,mypi,centroids);
+    commands = cam_Tracking(cam_snap,centroids, commands);
     end
+    csvwrite_with_headers('commands.csv', commands,labels);                 %%%Generates a Commands CSV file
+    copyfile('commands.csv','C:\Users\Justen\Desktop\New folder')           %%%Change Directory for file sharing
  end 
 
 
