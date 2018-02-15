@@ -7,6 +7,6 @@ Toolboxes Required:
 
 Hardware Required:  
 -Robot mobile Pioneer 3-DX  
--Infrared Sensor  
+-Infrared Camera  
 -Raspberry Pi 3 Model B  
 -CPU-GPU Computer  
