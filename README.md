@@ -1,7 +1,7 @@
 # Gesture Recognition Utilizing an Infrared Sensor
 
 Toolboxes Required:  
--MATLAB Support Package for Raspberry Pi Hardward  
+-MATLAB Support Package for Raspberry Pi Hardware
 -Image Acquisition Toolbox  
 -Image Processing Toolbox  
 
